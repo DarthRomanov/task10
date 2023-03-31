@@ -22,8 +22,11 @@ class Record(Field):
     def __init__(self, name:Name, phone:Phone=None):
         self.name = name
         self.phone = []
-
-
+    def add(self, name:Name, phone:Phone=None):
+        AddressBook.update({self.name:self.phone})
+    def change(self, name:Name, phone:Phone=None):
+        AddressBook[self.name] = self.phone
+   
 
 
 
