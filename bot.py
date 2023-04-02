@@ -2,7 +2,9 @@ from collections import UserDict
 
 
 class Field():
-    pass
+    def __init__(self, value):
+      self.value = value
+      
 
 class Name(Field):
     pass
@@ -12,19 +14,18 @@ class Phone(Field):
     pass
 
 
-class Record(Field):
+class Record:
     def __init__(self, name:Name, phone:Phone=None):
         self.name = name
-        self.phone = []
-        record = {self.name : self.phone}
-    def add(self, name:Name, phone:Phone=None):
-        AddressBook.update({self.name:self.phone})
+        self.phones = [phone] if phone else []
+        # record = {self.name : self.phone}
+    def add_phone(self, phone:Phone):
+        self.phones.append(phone)
+        # AddressBook.update({self.name:self.phone})
     def change(self, name:Name, phone:Phone=None):
-        AddressBook[self.name] = self.phone
+        # AddressBook[self.name] = self.phone
+        pass
    
-
-
-
 
 class AddressBook(UserDict):
     
@@ -34,11 +35,9 @@ class AddressBook(UserDict):
         # AddressBook.update({self.name:self.phone})
 
 
-
 contacts = AddressBook()
-name = Name()
-phone = Phone()
-
+# name = Name()
+# phone = Phone()
 
 def input_error(func):
     def inner(*args):
@@ -59,7 +58,8 @@ def hello(*args):
 def add_ct(*args):
     name = Name(args[0])
     phone = Phone(args[1])
-    contacts.add({name : phone})
+    rec = Record(name, phone)
+    contacts.add_record(rec)
     return f"Contact {name} with phone {phone} add successful"
     
 @input_error    
