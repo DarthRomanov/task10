@@ -2,7 +2,10 @@ from collections import UserDict
 
 
 class Field():
-    pass
+    def __init__(self, value):
+        self.value = value
+    def __str__(self) -> str:
+        return str(self.value)
 
 class Name(Field):
     pass
@@ -12,15 +15,16 @@ class Phone(Field):
     pass
 
 
-class Record(Field):
+class Record:
     def __init__(self, name:Name, phone:Phone=None):
         self.name = name
-        self.phone = []
-        record = {self.name : self.phone}
-    def add(self, name:Name, phone:Phone=None):
-        AddressBook.update({self.name:self.phone})
-    def change(self, name:Name, phone:Phone=None):
-        AddressBook[self.name] = self.phone
+        self.phones = [phone] if phone else []
+    
+    def add_phone(self, phone:Phone):
+        self.phones.append(phone)
+    
+    
+    
    
 
 
@@ -30,14 +34,17 @@ class AddressBook(UserDict):
     
     def add_record(self, record:Record):
         self.data[record.name.value] = record
-    #def add(self, name:Name, phone:Phone=None):
-        # AddressBook.update({self.name:self.phone})
+    def change_phone(self, new_phone:Phone):
+
+        self.phones = [new_phone] if new_phone else []
+    
+    
+    
 
 
 
 contacts = AddressBook()
-name = Name()
-phone = Phone()
+
 
 
 def input_error(func):
@@ -59,14 +66,18 @@ def hello(*args):
 def add_ct(*args):
     name = Name(args[0])
     phone = Phone(args[1])
-    contacts.add({name : phone})
+    rec = Record(name, phone)
+    contacts.add_record(rec)
     return f"Contact {name} with phone {phone} add successful"
-    
+
+
 @input_error    
 def change(*args):
     name = args[0]
-    new_phone = args[1]
-    contacts[name] = new_phone
+    phone = args[1]
+    contacts.pip(name)
+    rec = Record(name, phone)
+    contacts.add_record(rec)
     return f"Contact {name}  change successful"
     
 @input_error
@@ -92,6 +103,7 @@ def parse_input(text):
             return add_ct, text[len('add'):].split()
         case 'change':
             return change, text[len('change'):].split()
+        
         case 'phone':
             return phone, text[len('phone'):].split()
         case 'show':
