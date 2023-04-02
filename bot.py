@@ -2,13 +2,7 @@ from collections import UserDict
 
 
 class Field():
-    def __init__(self, value):
-        if not isinstance(value, str):
-            raise ValueError("Value must be a string")
-        self.value = value
-    def __str__(self) -> str:
-        return str(self.value)
-
+    pass
 
 class Name(Field):
     pass
@@ -22,6 +16,7 @@ class Record(Field):
     def __init__(self, name:Name, phone:Phone=None):
         self.name = name
         self.phone = []
+        record = {self.name : self.phone}
     def add(self, name:Name, phone:Phone=None):
         AddressBook.update({self.name:self.phone})
     def change(self, name:Name, phone:Phone=None):
@@ -35,10 +30,14 @@ class AddressBook(UserDict):
     
     def add_record(self, record:Record):
         self.data[record.name.value] = record
+    #def add(self, name:Name, phone:Phone=None):
+        # AddressBook.update({self.name:self.phone})
 
 
 
 contacts = AddressBook()
+name = Name()
+phone = Phone()
 
 
 def input_error(func):
@@ -57,10 +56,10 @@ def hello(*args):
     return "How can I help you?"
 
 @input_error    
-def add(*args):
-    name = args[0]
-    phone = args[1]
-    contacts.update({name : phone})
+def add_ct(*args):
+    name = Name(args[0])
+    phone = Phone(args[1])
+    contacts.add({name : phone})
     return f"Contact {name} with phone {phone} add successful"
     
 @input_error    
@@ -90,7 +89,7 @@ def parse_input(text):
         case 'hello':
             return hello, text.replace('hello', '').split()
         case 'add':
-            return add, text[len('add'):].split()
+            return add_ct, text[len('add'):].split()
         case 'change':
             return change, text[len('change'):].split()
         case 'phone':
