@@ -6,6 +6,8 @@ class Field():
         self.value = value
     def __str__(self) -> str:
         return str(self.value)
+    def __setitem__(self, name, value):
+        self.data[name] = value
 
 class Name(Field):
     pass
@@ -23,7 +25,8 @@ class Record:
     def add_phone(self, phone:Phone):
         self.phones.append(phone)
     
-    def change_phone(self, new_phone:Phone):
+    def change_phone(self, name:Name, new_phone:Phone):
+
 
         self.phones = [new_phone] if new_phone else []
     
@@ -36,8 +39,7 @@ class AddressBook(UserDict):
     
     def add_record(self, record:Record):
         self.data[record.name.value] = record
-    def __setitem__(self, key, value):
-        self.data[key] = value
+    
     
     
     
@@ -76,15 +78,15 @@ def add_ct(*args):
 @input_error    
 def change(*args):
     name = Name(args[0])
-    phone = Phone(args[1])
+    new_phone = Phone(args[1])
+    rec = Record(name, new_phone)
+
     
-    contacts[name] = phone
-    
-    #contacts.add_record(rec)
+    contacts.add_record(rec)
     return f"Contact {name}  change successful"
     
 @input_error
-def phone(*args):
+def phone_(*args):
     return contacts[args[0]]
 
 def show_all(*args):
@@ -108,7 +110,7 @@ def parse_input(text):
             return change, text[len('change'):].split()
         
         case 'phone':
-            return phone, text[len('phone'):].split()
+            return phone_, text[len('phone'):].split()
         case 'show':
             if text.split()[1].lower() == 'all':
                 return show_all, str.lower(text).replace('show all', '').split()
