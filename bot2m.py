@@ -39,6 +39,9 @@ class AddressBook(UserDict):
     def add_record(self, record:Record):
         self.data[record.name.value] = record
     
+    def __str__(self) -> str:
+        return '\n'.join([f'{r.name} : {r.phones}' for r in self.data.values()])
+    
     
    
 contacts = AddressBook()
