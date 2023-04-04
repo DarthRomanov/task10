@@ -4,8 +4,7 @@ from collections import UserDict
 class Field():
     def __init__(self, value):
         self.value = value
-    def __str__(self) -> str:
-        return str(self.value)
+    
     def __repr__(self):
         return f"{self.value}"
     
@@ -31,6 +30,11 @@ class Record:
             if old_phone.value == p.value:
                 self.phones[i] = new_phone
                 return f'Phone {old_phone} changed to phone {new_phone}'
+    def delete_phone(self, phone):
+        for i, p in enumerate(self.phones):
+            if phone.value == p.value:
+                self.phones[i] = None
+                return f'phone {phone} was deleted'
     
    
 
@@ -38,7 +42,8 @@ class AddressBook(UserDict):
     
     def add_record(self, record:Record):
         self.data[record.name.value] = record
-    
+    def __str__(self) -> str:
+        return '\n'.join([f'{r.name} : {r.phones}' for r in self.data.values()])
     
    
 contacts = AddressBook()
@@ -79,7 +84,12 @@ def change(*args):
     if rec:
         return rec.change_phone(phone, new_phone)
     return f'No record with name {name}'
-    
+
+def delete(*args):
+    name = Name(args[0])
+    phone = Phone(args[1])
+    rec = contacts.get(name.value)
+    rec.delete_phone(phone)
  
     
 @input_error
@@ -105,6 +115,8 @@ def parse_input(text):
             return add_ct, text[len('add'):].split()
         case 'change':
             return change, text[len('change'):].split()
+        case 'delete':
+            return delete, text[len('change'):].split()
         
         case 'phone':
             return phone_, text[len('phone'):].split()
