@@ -25,10 +25,10 @@ class Record:
     def add_phone(self, phone:Phone):
         self.phones.append(phone)
     
-    def change_phone(self, name:Name, new_phone:Phone):
-
-
-        self.phones = [new_phone] if new_phone else []
+    def change_phone(self, new_phone:Phone):
+        #self.phones.remove(phone)
+        #self.phones.append(new_phone)
+        self.phones = [new_phone]   
     
    
 
@@ -78,8 +78,11 @@ def add_ct(*args):
 @input_error    
 def change(*args):
     name = Name(args[0])
+    #phone = Phone(args[1])
     new_phone = Phone(args[1])
     rec = Record(name, new_phone)
+    contacts.add_record(rec)
+    
 
     
     contacts.add_record(rec)
