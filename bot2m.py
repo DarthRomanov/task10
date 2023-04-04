@@ -6,8 +6,7 @@ class Field():
         self.value = value
     def __str__(self) -> str:
         return str(self.value)
-    def __setitem__(self, name, value):
-        self.data[name] = value
+    
 
 class Name(Field):
     pass
@@ -25,15 +24,13 @@ class Record:
     def add_phone(self, phone:Phone):
         self.phones.append(phone)
     
-    def change_phone(self, new_phone:Phone):
-        #self.phones.remove(phone)
-        #self.phones.append(new_phone)
-        self.phones = [new_phone]   
+    def change_phone(self, old_phone:Phone,  new_phone:Phone):
+        for i, p in enumerate(self.phones):
+            if old_phone.value == p.value:
+                self.phones[i] = new_phone
+                return f'Phone {old_phone} changed to phone {new_phone}'
     
    
-
-
-
 
 class AddressBook(UserDict):
     
@@ -41,12 +38,7 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
     
     
-    
-    
-    
-
-
-
+   
 contacts = AddressBook()
 
 
@@ -63,6 +55,7 @@ def input_error(func):
             return "Fail, try again"
     return inner
 
+
 def hello(*args):
     return "How can I help you?"
 
@@ -78,15 +71,14 @@ def add_ct(*args):
 @input_error    
 def change(*args):
     name = Name(args[0])
-    #phone = Phone(args[1])
-    new_phone = Phone(args[1])
-    rec = Record(name, new_phone)
-    contacts.add_record(rec)
+    phone = Phone(args[1])
+    new_phone = Phone(args[2])
+    rec = contacts.get(name.value)
+    if rec:
+        return rec.change_phone(phone, new_phone)
+    return f'No record with name {name}'
     
-
-    
-    contacts.add_record(rec)
-    return f"Contact {name}  change successful"
+ 
     
 @input_error
 def phone_(*args):
